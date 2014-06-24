@@ -1,0 +1,13 @@
+google.com
+facebook.com
+youtube.com
+yahoo.com
+wikipedia.org
+linkedin.com
+twitter.com
+blogspot.com
+wordpress.com
+bing.com
+reddit.com
+ask.com
+tumblr.com
