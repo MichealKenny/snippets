@@ -1,6 +1,5 @@
 #Program to perform a series of tasks related to computer networking.
-#Tested on Linux Mint 17 and Windows 7
-from easygui import *
+#Tested on Linux Mint 16 and Windows 7
 from subprocess import check_output, CalledProcessError
 from re import findall
 from os import name
@@ -13,10 +12,10 @@ def ping():
             #Obtain latency from the output, Regex find third last float.
             latency = (findall('\d+.\d+', output))[-3]
 
-            msgbox('The latency of the connection is: ' + latency + 'ms', gui_title)
+            print 'The latency of the connection is:', latency, 'ms'
 
         except CalledProcessError:
-            msgbox('Could not ping: ' + ip_addr)
+            print 'Could not ping:', ip_addr
 
     elif name == 'nt':
         try:
@@ -25,10 +24,10 @@ def ping():
             #Obtain latency from the output, Regex find last int.
             latency = (findall('\d+', output))[-1]
 
-            msgbox('The latency of the connection is: ' + latency + 'ms', gui_title)
+            print 'The latency of the connection is:', latency, 'ms'
 
         except CalledProcessError:
-            msgbox('Could not ping: ' + ip_addr)
+            print 'Could not ping:', ip_addr
 
 def multi_ping():
     if name == 'posix':
@@ -42,7 +41,7 @@ def multi_ping():
             latency_list.append(float(latency))
 
         except CalledProcessError:
-            msgbox('Could not ping: ' + ip_addr)
+            print 'Could not ping:', ip_addr
             latency_list.append(9999)
 
     elif name == 'nt':
@@ -56,52 +55,49 @@ def multi_ping():
             latency_list.append(int(latency))
 
         except CalledProcessError:
-            msgbox('Could not ping: ' + ip_addr)
+            print 'Could not ping:', ip_addr
             latency_list.append(9999)
 
-#GUI Variables.
-gui_desc = 'Network Utils performs a series of tasks related to computer networking.'
-gui_title = 'Network Utils'
-gui_choice = ['Ping an IP', 'Fastest route finder', 'Network address finder']
-
-#GUI Menus.
-choice = buttonbox(gui_desc, gui_title, gui_choice)
+#Choice
+print 'Network Utils performs a series of tasks related to computer networking.'
+print '[0]Ping an IP, [1]Fastest route finder, [2]Network address finder'
+choice = input('Please choose from 0/1/2: ')
 
 #Main If statment.
-if choice == gui_choice[0]: #Ping an IP address.
+if choice == 0: #Ping an IP address.
 
     #Input and ping the IP address.
-    ip_addr = enterbox('Please enter an IP address:', gui_title, '8.8.8.8')
+    ip_addr = raw_input('Please enter an IP address: ')
 
     #Ping IP address.
     ping()
 
-elif choice == gui_choice[1]: #Fastest route finder.
+elif choice == 1: #Fastest route finder.
 
     #Local Variables.
     ip_list = []
     latency_list = []
-    finished = 1
+    finished = 'N'
 
     #Choose which way to input addresses.
-    choice = buttonbox('Would you like to enter the addresses one-by-one or import them from a text file?', gui_title, ['One-by-one', 'Open file'])
+    print 'Would you like to enter the addresses [0]one-by-one or [1]import them from a text file?'
+    choice = input('Please choose from 0/1: ')
 
-    if choice == 'One-by-one':
-
+    if choice == 0:
         #Enter IP address until user is finished.
-        while finished != 0:
+        while finished != 'Y':
+            #Input IP address.
+            ip_addr = raw_input('Please enter an IP address: ')
+            ip_list.append(ip_addr)
 
-                #Input IP address.
-                ip_addr = enterbox('Please enter an IP address:', gui_title, '8.8.8.8')
-                ip_list.append(ip_addr)
+            #Continue/Cancel.
+            print 'Are you finished entering IPs?'
+            finished = raw_input('Y/N?: ')
 
-                #Continue/Cancel.
-                finished = ynbox('Enter another IP address?')
-
-    elif choice == 'Open file':
+    elif choice == 1:
 
         #Open file window.
-        ip_file = fileopenbox()
+        ip_file = raw_input('File location: ')
 
         #Add each line of the text file to the IP list.
         for line in open(ip_file):
@@ -117,18 +113,17 @@ elif choice == gui_choice[1]: #Fastest route finder.
     index = latency_list.index(min(latency_list))
 
     #Display the fastest route and it's latency.
-    gui_msg = 'The fastest route is: ' + ip_list[index] + ' with a latency of: ' + str(latency_list[index]) + ' ms.'
-    msgbox(gui_msg, gui_title)
+    print 'The fastest route is:', ip_list[index], 'with a latency of:', str(latency_list[index]), 'ms.'
 
-elif choice == gui_choice[2]: #Find the network address given the IP and subnet.
+elif choice == 2: #Find the network address given the IP and subnet.
 
     #Variables.
     count = 0
     net_octet_list = []
 
     #Inputs.
-    ip_addr = enterbox('Please enter the IP address:', gui_title, '192.168.1.56')
-    subnet_mask = enterbox('Please enter the subnet mask:', gui_title, '255.255.255.240')
+    ip_addr = raw_input('Please enter the IP address(192.168.1.56): ')
+    subnet_mask = raw_input('Please enter the subnet mask(255.255.255.240): ')
 
     #Split inputs.
     ip_octet_list = ip_addr.split('.')
@@ -141,5 +136,4 @@ elif choice == gui_choice[2]: #Find the network address given the IP and subnet.
         count += 1
 
     #Output.
-    gui_msg = 'The network address is: ' + str(net_octet_list[0]) + '.' + str(net_octet_list[1]) + '.' + str(net_octet_list[2]) + '.' + str(net_octet_list[3])
-    msgbox(gui_msg, gui_title)
+    print 'The network address is:', str(net_octet_list[0]) + '.' + str(net_octet_list[1]) + '.' + str(net_octet_list[2]) + '.' + str(net_octet_list[3])
