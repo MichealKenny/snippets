@@ -96,7 +96,8 @@ elif choice == 1: #Fastest route finder.
 
     elif choice == 1:
 
-        #Open file window.
+        #Type file location.
+        print 'Location of file relative to .py, eg: data/file.txt'
         ip_file = raw_input('File location: ')
 
         #Add each line of the text file to the IP list.
