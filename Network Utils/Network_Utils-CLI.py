@@ -1,5 +1,5 @@
 #Program to perform a series of tasks related to computer networking.
-#Tested on Linux Mint 16 and Windows 7
+#Tested on Linux Mint 17 and Windows 7
 from subprocess import check_output, CalledProcessError
 from re import findall
 from os import name
